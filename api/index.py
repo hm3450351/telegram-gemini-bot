@@ -11,14 +11,15 @@ from telegram.ext import (
 )
 import google.generativeai as genai
 
-# 1. المفاتيح الخاصة بك
-TELEGRAM_TOKEN = os.getenv("BOT_TOKEN", "8946226333:AAEs31DZpAj6m3ue4QB6tcTFCRMG2EPG-M4")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AQ.Ab8RN6JESHLfTDjjPVu4PYxWPV1x8MPo-WJNi8PwppJzRRvuSw")
+# جلب المفاتيح من بيئة Vercel حصراً (بدون قيم افتراضية مكشوفة)
+TELEGRAM_TOKEN = os.getenv("BOT_TOKEN")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-# تهيئة مكتبة Gemini
-genai.configure(api_key=GEMINI_API_KEY)
+# تهيئة Gemini باستخدام المفتاح المجلوب من البيئة
+if GEMINI_API_KEY:
+    genai.configure(api_key=GEMINI_API_KEY)
 
-# 🎯 2. التوجيه المباشر للذكاء الاصطناعي
+# 🎯 التوجيه المباشر للذكاء الاصطناعي
 SYSTEM_PROMPT = """
 أنت خبير ومساعد ذكاء اصطناعي متخصص في تقنية المعلومات، الشبكات، والأمن السيبراني.
 شخصيتك: دقيق، عملي، ومباشر في الشرح.
@@ -29,7 +30,7 @@ SYSTEM_PROMPT = """
 """
 
 model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash-latest",
+    model_name="gemini-1.5-flash",
     system_instruction=SYSTEM_PROMPT
 )
 
@@ -48,7 +49,7 @@ def ask_ai(user_prompt: str) -> str:
         response = model.generate_content(user_prompt)
         return response.text
     except Exception as e:
-        return f"⚠️ حدث خطأ أثناء الاتصال بنموذج Gemini: {str(e)}"
+        return f"⚠️ حدث خطأ أثناء الاتصال بنموذج Gemini:\n{str(e)}"
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_text = update.message.text
