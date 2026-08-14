@@ -1,23 +1,2 @@
-import google.generativeai as genai
-
-# جلب جميع النماذج المدعومة والمتاحة لمفتاحك تلقائياً
-def get_available_model():
-    try:
-        models = genai.list_models()
-        for m in models:
-            # التأكد من أن النموذج يدعم generateContent وأن اسمه يحتوي على flash أو pro
-            if 'generateContent' in m.supported_generation_methods:
-                if 'flash' in m.name or 'pro' in m.name:
-                    return m.name
-        # نموذج افتراضي في حال عدم العثور
-        return "gemini-1.5-flash"
-    except Exception:
-        return "gemini-1.5-flash"
-
-# تحديد اسم النموذج الديناميكي
-ACTIVE_MODEL_NAME = get_available_model()
-
-model = genai.GenerativeModel(
-    model_name=ACTIVE_MODEL_NAME,
-    system_instruction=SYSTEM_PROMPT
-)
+python-telegram-bot==20.8
+google-generativeai>=0.8.3
