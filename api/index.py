@@ -11,24 +11,25 @@ from telegram.ext import (
 )
 import google.generativeai as genai
 
-# جلب المفاتيح من متغيرات البيئة في Vercel بدلاً من كتابتها هنا
-TELEGRAM_TOKEN = os.getenv("BOT_TOKEN")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+# 1. المفاتيح الخاصة بك
+TELEGRAM_TOKEN = os.getenv("BOT_TOKEN", "8946226333:AAEs31DZpAj6m3ue4QB6tcTFCRMG2EPG-M4")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AQ.Ab8RN6JESHLfTDjjPVu4PYxWPV1x8MPo-WJNi8PwppJzRRvuSw")
 
-# تهيئة Gemini باستخدام المفتاح المجلوب من البيئة
+# تهيئة مكتبة Gemini
 genai.configure(api_key=GEMINI_API_KEY)
 
+# 🎯 2. التوجيه المباشر للذكاء الاصطناعي
 SYSTEM_PROMPT = """
 أنت خبير ومساعد ذكاء اصطناعي متخصص في تقنية المعلومات، الشبكات، والأمن السيبراني.
 شخصيتك: دقيق، عملي، ومباشر في الشرح.
 قواعد الإجابة:
-1. تجيب باللغة العربية دائماً وبأسلوب سهل وواضح وتهدف اجاباتك في المحادثات لبناء علاقة جيدة مع المحادثين كانك بشري باستخدام القواعد الاجتماعية التي تعرفها باحترافية وطرق التأثير كانك المطور دون ان تعرف بنفسك فقط استمر بالحديث مع من يحادثك.
+1. تجيب باللغة العربية دائماً وبأسلوب سهل وواضح.
 2. عند كتابة أكواد أو أوامر تيرمينال، استخدم التنسيق المخصص للأكواد.
-3. إذا سُئلت عن شيء خارج اختصاصك التقني، أجب باختصار ولطف ثم انتظر ردود المستخدم الاخر وضع الهدف في أي محادثة هو كسب الطرف الأخر لجانبك ليحبك وتصرف طبيعية كأنك بشري يمارس محادثة عادية فقط كبشري راقي وذكي وواقعي .
+3. إذا سُئلت عن شيء خارج اختصاصك التقني، أجب باختصار ولطف ثم وجّه المستخدم للجانب التقني.
 """
 
 model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash",
+    model_name="gemini-1.5-flash-latest",
     system_instruction=SYSTEM_PROMPT
 )
 
@@ -37,8 +38,8 @@ app_telegram = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     welcome_msg = (
         f"أهلاً بك {update.effective_user.first_name}! 🤖✨\n\n"
-        " أهلا بك Cybron.\n"
-        "منورين"
+        "أنا مساعد الذكاء الاصطناعي المشغّل بواسطة Google Gemini.\n"
+        "أنا جاهز لاستقبال أسئلتك واستفساراتك التقنية والبرمجية."
     )
     await update.message.reply_text(welcome_msg)
 
